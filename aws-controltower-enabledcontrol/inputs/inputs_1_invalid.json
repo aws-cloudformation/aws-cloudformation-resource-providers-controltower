@@ -1,0 +1,4 @@
+{
+  "ControlIdentifier": "arn:aws:controltower:us-east-1::control/AWS-GR_INVALID_GUARDRAIL",
+  "TargetIdentifier": "arn:aws:organizations::123456789012:ou/o-qweqweqwe/ou-qwer-qwerqwer"
+}
