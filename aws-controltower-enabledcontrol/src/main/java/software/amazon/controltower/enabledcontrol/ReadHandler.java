@@ -24,9 +24,17 @@ import java.util.Optional;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
 
-    private AWSControlTower controlTowerClient;
+    private final AWSControlTower controlTowerClient;
     private AmazonWebServicesClientProxy clientProxy;
     private Logger logger;
+
+    public ReadHandler() {
+        controlTowerClient = ClientBuilder.getStandardClient(logger);
+    }
+
+    public ReadHandler(AWSControlTower awsControlTower) {
+        controlTowerClient = awsControlTower;
+    }
 
     @Override
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
@@ -39,7 +47,6 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         this.logger = logger;
 
         clientProxy = proxy;
-        controlTowerClient = ClientBuilder.getStandardClient(logger);
 
         try {
             String nextToken = null;
