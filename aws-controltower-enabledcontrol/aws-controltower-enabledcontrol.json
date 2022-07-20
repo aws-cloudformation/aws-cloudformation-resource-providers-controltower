@@ -25,6 +25,7 @@
   "handlers": {
     "create": {
       "permissions": [
+        "controltower:ListEnabledControls",
         "controltower:GetControlOperation",
         "controltower:EnableControl"
       ]

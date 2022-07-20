@@ -17,4 +17,5 @@ import software.amazon.cloudformation.proxy.StdCallbackContext;
 public class CallbackContext extends StdCallbackContext {
     private String operationIdentifier;
     private Integer stabilizationRetriesRemaining;
+    private Boolean isCreateInProgress;
 }
