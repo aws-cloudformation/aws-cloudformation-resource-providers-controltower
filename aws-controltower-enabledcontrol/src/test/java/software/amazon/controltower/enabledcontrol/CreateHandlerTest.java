@@ -414,4 +414,31 @@ public class CreateHandlerTest {
         assertThat(response.getResourceModels()).isNull();
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.AlreadyExists);
     }
+
+    @Test
+    public void listEnabledControls_throwsException() {
+        // Setup
+        final CreateHandler handler = new CreateHandler();
+
+        final ResourceModel model = ResourceModel.builder().controlIdentifier(TEST_GR).targetIdentifier(TEST_OUID).build();
+
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+
+        doThrow(new ValidationException(ERROR)).when(proxy).injectCredentialsAndInvoke(any(ListEnabledControlsRequest.class), ArgumentMatchers.<Function<ListEnabledControlsRequest, ListEnabledControlsResult>>any());
+
+        // Execute
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, null, logger);
+
+        // Verify
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
+        assertThat(response.getCallbackContext()).isNull();
+        assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
+        assertThat(response.getResourceModel()).isNull();
+        assertThat(response.getResourceModels()).isNull();
+        assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.InvalidRequest);
+    }
 }

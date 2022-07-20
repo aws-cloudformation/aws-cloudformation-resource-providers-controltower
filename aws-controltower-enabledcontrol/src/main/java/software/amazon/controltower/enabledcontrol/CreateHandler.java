@@ -12,6 +12,7 @@ import com.amazonaws.services.controltower.model.ResourceNotFoundException;
 import com.amazonaws.services.controltower.model.ServiceQuotaExceededException;
 import com.amazonaws.services.controltower.model.ThrottlingException;
 import com.amazonaws.services.controltower.model.ValidationException;
+import software.amazon.cloudformation.exceptions.BaseHandlerException;
 import software.amazon.cloudformation.exceptions.CfnAccessDeniedException;
 import software.amazon.cloudformation.exceptions.CfnAlreadyExistsException;
 import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
@@ -64,16 +65,26 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                                                callbackContext;
 
         if(!currentContext.getIsCreateInProgress()) {
-            final ProgressEvent<ResourceModel, CallbackContext> readResponse = (new ReadHandler(controlTowerClient))
-                    .handleRequest(proxy, request, CallbackContext.builder().build(), logger);
+            try {
+                final ProgressEvent<ResourceModel, CallbackContext> readResponse = (new ReadHandler(controlTowerClient))
+                        .handleRequest(proxy, request, CallbackContext.builder().build(), logger);
 
-            if(OperationStatus.SUCCESS.equals(readResponse.getStatus())) {
-                logger.log(String.format("StackId [%s] skipping create as control %s is already enabled on target %s",
-                        request.getStackId(), model.getControlIdentifier(), model.getTargetIdentifier()));
+                if(OperationStatus.SUCCESS.equals(readResponse.getStatus())) {
+                    logger.log(String.format("StackId [%s] skipping create as control %s is already enabled on target %s",
+                            request.getStackId(), model.getControlIdentifier(), model.getTargetIdentifier()));
+                    return ProgressEvent.<ResourceModel, CallbackContext>builder()
+                            .status(OperationStatus.FAILED)
+                            .errorCode(HandlerErrorCode.AlreadyExists)
+                            .build();
+                }
+            } catch (BaseHandlerException e) {
+                logger.log(String.format("StackId [%s] readHandler failed with an exception %s", request.getStackId(), e.getErrorCode()));
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
                         .status(OperationStatus.FAILED)
-                        .errorCode(HandlerErrorCode.AlreadyExists)
+                        .errorCode(e.getErrorCode())
                         .build();
+            } catch (Throwable e) {
+                throw new CfnInternalFailureException(e);
             }
         }
 
