@@ -28,6 +28,8 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
     private AmazonWebServicesClientProxy clientProxy;
     private Logger logger;
 
+    public static final int MAX_RESULTS = 40;
+
     public ReadHandler() {
         controlTowerClient = ClientBuilder.getStandardClient(logger);
     }
@@ -55,6 +57,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
             do {
                 final ListEnabledControlsRequest listEnabledControlsRequest = new ListEnabledControlsRequest()
                         .withTargetIdentifier(model.getTargetIdentifier())
+                        .withMaxResults(MAX_RESULTS)
                         .withNextToken(nextToken);
                 final ListEnabledControlsResult listEnabledControlsResult = clientProxy.injectCredentialsAndInvoke(
                         listEnabledControlsRequest, controlTowerClient::listEnabledControls);
