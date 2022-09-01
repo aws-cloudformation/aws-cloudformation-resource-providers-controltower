@@ -10,7 +10,7 @@ public class ClientBuilder {
         String region = System.getenv("AWS_REGION");
         return AWSControlTowerClientBuilder.standard()
                 .withRegion(region)
-                .withRequestHandlers(new RequestLoggingHandler(logger))
+                .withRequestHandlers(new RequestLoggingHandler(logger), new CloudformationUserAgentRequestHandler())
                 .build();
     }
 }
