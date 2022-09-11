@@ -3,10 +3,8 @@ build
 *.iml
 .gradle/
 .idea/
-.github/
 gradlew.bat
 wrapper/
 gradlew
 *.zip
 .factorypath
-
