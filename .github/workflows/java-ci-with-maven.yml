@@ -1,0 +1,49 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_REGION: us-east-1
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Python packages
+        run: pip install pre-commit cloudformation-cli cloudformation-cli-java-plugin
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+      - name: Run maven verify for all resources
+        run: |
+          for directory in $GITHUB_WORKSPACE/aws-*; do
+            cd "$directory"
+            mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -B clean verify
+          done
+      - name: Check failure log
+        if: ${{ failure() }}
+        run: |
+          for directory in $GITHUB_WORKSPACE/aws-*; do
+            cd "$directory"
+            if [[ -f "rpdk.log" ]]
+            then
+               cat "rpdk.log"
+            fi
+          done
