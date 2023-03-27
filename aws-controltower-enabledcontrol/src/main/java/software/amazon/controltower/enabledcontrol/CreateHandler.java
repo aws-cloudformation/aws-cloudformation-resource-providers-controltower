@@ -30,6 +30,8 @@ import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
+import static software.amazon.controltower.enabledcontrol.HandlerUtils.logException;
+
 public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private AWSControlTower controlTowerClient;
@@ -189,6 +191,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             if (e.getMessage().contains("HttpTimeoutException")) {
                 throw new CfnGeneralServiceException(e);
             }
+            logException(e, this.logger);
             throw new CfnInternalFailureException(e);
         }
     }
@@ -209,6 +212,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             if (e.getMessage().contains("HttpTimeoutException")) {
                 throw new CfnNetworkFailureException(e);
             }
+            logException(e, this.logger);
             throw new CfnInternalFailureException(e);
         }
     }
