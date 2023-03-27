@@ -11,6 +11,7 @@ import com.amazonaws.services.controltower.model.ValidationException;
 import software.amazon.cloudformation.exceptions.CfnAccessDeniedException;
 import software.amazon.cloudformation.exceptions.CfnInternalFailureException;
 import software.amazon.cloudformation.exceptions.CfnInvalidRequestException;
+import software.amazon.cloudformation.exceptions.CfnNetworkFailureException;
 import software.amazon.cloudformation.exceptions.CfnNotFoundException;
 import software.amazon.cloudformation.exceptions.CfnThrottlingException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
@@ -21,6 +22,8 @@ import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.util.Optional;
+
+import static software.amazon.controltower.enabledcontrol.HandlerUtils.logException;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
 
@@ -83,6 +86,10 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         } catch (ResourceNotFoundException e) {
             throw new CfnNotFoundException(e);
         } catch (Throwable e) {
+            if (e.getMessage().contains("HttpTimeoutException")) {
+                throw new CfnNetworkFailureException(e);
+            }
+            logException(e, this.logger);
             throw new CfnInternalFailureException(e);
         }
         return ProgressEvent.<ResourceModel, CallbackContext>builder()

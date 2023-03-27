@@ -37,9 +37,9 @@ _Required_: Yes
 
 _Type_: String
 
-_Minimum_: <code>20</code>
+_Minimum Length_: <code>20</code>
 
-_Maximum_: <code>2048</code>
+_Maximum Length_: <code>2048</code>
 
 _Pattern_: <code>^arn:aws[0-9a-zA-Z_\-:\/]+$</code>
 
@@ -53,10 +53,11 @@ _Required_: Yes
 
 _Type_: String
 
-_Minimum_: <code>20</code>
+_Minimum Length_: <code>20</code>
 
-_Maximum_: <code>2048</code>
+_Maximum Length_: <code>2048</code>
 
 _Pattern_: <code>^arn:aws[0-9a-zA-Z_\-:\/]+$</code>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+

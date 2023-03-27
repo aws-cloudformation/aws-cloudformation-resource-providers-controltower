@@ -26,6 +26,8 @@ import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
+import static software.amazon.controltower.enabledcontrol.HandlerUtils.logException;
+
 public class DeleteHandler extends BaseHandler<CallbackContext> {
 
     private static final int NUMBER_OF_STATE_POLL_RETRIES = 1080;
@@ -129,6 +131,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
             if (e.getMessage().contains("HttpTimeoutException")) {
                 throw new CfnNetworkFailureException(e);
             }
+            logException(e, this.logger);
             throw new CfnInternalFailureException(e);
         }
     }
@@ -149,6 +152,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
             if (e.getMessage().contains("HttpTimeoutException")) {
                 throw new CfnNetworkFailureException(e);
             }
+            logException(e, this.logger);
             throw new CfnInternalFailureException(e);
         }
     }
