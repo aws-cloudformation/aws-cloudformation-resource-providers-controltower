@@ -84,6 +84,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
                         .status(OperationStatus.FAILED)
                         .errorCode(e.getErrorCode())
+                        .message(e.getMessage())
                         .build();
             } catch (Throwable e) {
                 throw new CfnInternalFailureException(e);
