@@ -80,10 +80,11 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                             .build();
                 }
             } catch (BaseHandlerException e) {
-                logger.log(String.format("StackId [%s] readHandler failed with an exception %s", request.getStackId(), e.getErrorCode()));
+                logger.log(String.format("StackId [%s] readHandler failed with an exception %s %s", request.getStackId(), e.getErrorCode(), e.getMessage()));
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
                         .status(OperationStatus.FAILED)
                         .errorCode(e.getErrorCode())
+                        .message(e.getMessage())
                         .build();
             } catch (Throwable e) {
                 throw new CfnInternalFailureException(e);
