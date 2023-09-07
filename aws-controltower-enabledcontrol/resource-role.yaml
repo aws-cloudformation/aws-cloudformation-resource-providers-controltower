@@ -35,6 +35,12 @@ Resources:
                 - "controltower:GetControlOperation"
                 - "controltower:ListEnabledControls"
                 - "organizations:UpdatePolicy"
+                - "organizations:CreatePolicy"
+                - "organizations:AttachPolicy"
+                - "organizations:DetachPolicy"
+                - "organizations:ListPoliciesForTarget"
+                - "organizations:ListTargetsForPolicy"
+                - "organizations:DescribePolicy"
                 Resource: "*"
 Outputs:
   ExecutionRoleArn:
